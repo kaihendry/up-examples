@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bufio"
+	"encoding/base64"
 	"html/template"
 	"net/http"
 	"os"
@@ -35,14 +37,22 @@ func submit(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
+	buf := make([]byte, hdr.Size)
+
+	// read file content into buffer
+	fReader := bufio.NewReader(file)
+	fReader.Read(buf)
+
 	w.Header().Set("Content-Type", "text/html")
 	views.ExecuteTemplate(w, "index.html", struct {
-		Name string
-		Size int64
-		Type string
+		Name         string
+		Size         int64
+		Type         string
+		ImgBase64Str string
 	}{
-		Name: hdr.Filename,
-		Size: hdr.Size,
-		Type: hdr.Header.Get("Content-Type"),
+		Name:         hdr.Filename,
+		Size:         hdr.Size,
+		Type:         hdr.Header.Get("Content-Type"),
+		ImgBase64Str: base64.StdEncoding.EncodeToString(buf),
 	})
 }

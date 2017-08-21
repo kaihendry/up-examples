@@ -17,11 +17,12 @@
     <h1>Multipart Form Example</h1>
     {{if .Name}}
       <p>Upload a {{.Size}} byte {{.Type}} file named {{.Name}}.</p>
+	  <img src="data:image/jpg;base64,{{.ImgBase64Str}}">
     {{else}}
       <p>Upload an image.</p>
     {{end}}
     <form action="submit" method="post" enctype="multipart/form-data">
-      <input type="file" name="image" placeholder="Image">
+      <input type="file" name="image" placeholder="Image" accept="image/jpeg">
       <input type="submit" value="Upload">
     </form>
   </body>
